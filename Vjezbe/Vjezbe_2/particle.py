@@ -28,11 +28,14 @@ class Particle:
         self.y += self.vy * dt
         self.vy -= g * dt
 
+        self.x_list.append(self.x)
+        self.y_list.append(self.y)
+
     def range(self, dt = 0.1):
         self.reset() #kreni od nule
 
         while self.y >= 0: #ako je iznad tla
-            self._move(dt) #simuliraj kretanje malo po malo (promjena od vy)
+            self.__move(dt) #simuliraj kretanje malo po malo (promjena od vy)
 
         return self.x #vrati domet
     
