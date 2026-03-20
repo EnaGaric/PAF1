@@ -21,4 +21,4 @@ def raspon(f, x_min, x_max, epsilon, metoda="three_step"):
     for x in x_values:
         y_values.append(derivacija(f, x, epsilon, metoda))
 
-    return x_values, y_values
+    return x_values, np.array(y_values)
