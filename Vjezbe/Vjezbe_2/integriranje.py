@@ -2,82 +2,47 @@ import numpy as np
 import matplotlib.pyplot as plt
 import calculus
 
+
+
 def f(x):
-    return np.sin(5*x) + 0.5*x
+    return 2*x**2 + 3
 
 a = 0
-b = 2
-n = 4
+b = 1
 
-if a > b:
-    a, b = b, a
-
-
-#integrali
-donja_granica, gornja_granica = calculus.pravokutna_aproksimacija(f, a, b, n)
-pravokutna_srednja = (donja_granica + gornja_granica)/2
-trap = calculus.trapezna_metoda(f, a, b, n)
-
-# analitičko rješenje
+# "točno" rješenje (numerički jako precizno)
 analiticko = calculus.trapezna_metoda(f, a, b, 10000)
 
+# brojevi podjela
+n_values = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]
 
-print("\nRezultati:")
-print(f"Donja međa: {donja_granica:.2f}")
-print(f"Gornja međa: {gornja_granica:.2f}")
-print(f"Pravokutna metoda: {pravokutna_srednja:.2f}")
-print(f"Trapezna metoda: {trap:.2f}")
-print(f"Točno rješenje je: {analiticko:.2f}")
-
-# Brojevi podjela za usporedbu
-n_values = [2, 4, 8, 16]  # manje n da se vidi razlika
-pravokutna = []
+donje = []
+gornje = []
 trapezna = []
 
-x = np.linspace(a, b, 100)
-plt.figure(figsize=(12,5))
-
-for nn in n_values:
-    d, g = calculus.pravokutna_aproksimacija(f, a, b, nn)
-    pravokutna.append(d) 
-    trapezna.append(calculus.trapezna_metoda(f, a, b, nn))
 
 
-plt.subplot(2,2,1)
-plt.plot(x, f(x), color='blue', label='f(x)')
-plt.title("Funkcija f(x)")
-plt.xlabel("x")
-plt.ylabel("f(x)")
-plt.legend()
+for n in n_values:
+    d, g = calculus.pravokutna_aproksimacija(f, a, b, n)
+    donje.append(d)
+    gornje.append(g)
+    trapezna.append(calculus.trapezna_metoda(f, a, b, n))
 
 
-# subplot 1: pravokutna metoda
-plt.subplot(2,2,2)
-plt.plot(n_values, pravokutna, 'o--', color='red', markersize=8, label="Pravokutna metoda")
-plt.axhline(analiticko, linestyle=':', color='blue', label="Analitičko rješenje")
-plt.title("Pravokutna metoda")
-plt.xlabel("Broj podjela n")
-plt.ylabel("Vrijednost integrala")
-plt.legend()
 
-# subplot 2: trapezna metoda
-plt.subplot(2,2,3)
-plt.plot(n_values, trapezna, 's-', color='green', markersize=8, label="Trapezna metoda")
-plt.axhline(analiticko, linestyle=':', color='blue', label="Analitičko rješenje")
-plt.title("Trapezna metoda")
-plt.xlabel("Broj podjela n")
-plt.ylabel("Vrijednost integrala")
-plt.legend()
+plt.figure()
 
-plt.subplot(2,2,4)
-plt.plot(n_values, pravokutna, 'o--', color='red', markersize=8, label="Pravokutna metoda")
-plt.plot(n_values, trapezna, 's-', color='green', markersize=8, label="Trapezna metoda")
-plt.axhline(analiticko, linestyle=':', color='blue', label="Analitičko rješenje")
-plt.title("Usporedba metoda")
-plt.xlabel("Broj podjela n")
-plt.ylabel("Vrijednost integrala")
+plt.plot(n_values, gornje, 'o', label="Gornja međa")
+plt.plot(n_values, donje, 'o', label="Donja međa")
+plt.plot(n_values, trapezna, 'o', label="Trapezna metoda")
+
+plt.axhline(analiticko, linestyle='-', label="Analitičko rješenje")
+
+plt.xlabel("N steps")
+plt.ylabel("Integral")
+plt.title("Numerička integracija: f(x)=2x²+3")
+
 plt.legend()
 plt.grid(True)
 
-plt.tight_layout()
 plt.show()

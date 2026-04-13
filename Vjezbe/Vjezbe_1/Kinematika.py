@@ -45,7 +45,6 @@ def jednoliko_gibanje(F, m, t_max = 10, dt = 1):
     plt.xlabel('Vrijeme (t) [s]')
     plt.ylabel('Položaj (x) [m]')
 
-
     plt.subplot(3, 1, 2)
     plt.plot(t, brzine, label='Brzina (v)', color='green')
     plt.xlabel('Vrijeme (t) [s]')
