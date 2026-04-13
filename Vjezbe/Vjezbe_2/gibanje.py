@@ -27,21 +27,21 @@ moja_klasa.plot_trajectory()
 # GRAF RELATIVNE POGREŠKe
 
 
-dt_values = np.logspace(-4, 0, 200)#promijeni da ide trend gore dolje oscilacije
+dt_values = np.linspace(0.001, 0.1, 300)#promijeni da ide trend gore dolje oscilacije
 rel_errors = []
 
 for dt in dt_values:
     p = Particle(v0, theta)
     D_num = p.range(dt=dt)
     
-    rel_error = abs(D_num - D_anal) / abs(D_anal)
+    rel_error = abs(D_num - D_anal) / abs(D_anal) *100
     rel_errors.append(rel_error)
 
 plt.figure()
-plt.plot(dt_values, rel_errors, marker='o')
+plt.plot(dt_values, rel_errors)
 
 plt.xlabel("dt")
-plt.ylabel("Relativna pogreška")
+plt.ylabel("Relativna pogreška [%]")
 plt.title("Ovisnost relativne pogreške o koraku dt")
 plt.grid(True)
 

@@ -24,6 +24,7 @@ class Particle:
         self.y_list = [self.y]
 
     def __move(self, dt):
+        
         self.x += self.vx * dt
         self.y += self.vy * dt
         self.vy -= g * dt
