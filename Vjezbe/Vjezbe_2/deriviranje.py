@@ -2,9 +2,7 @@ import calculus
 import numpy as np
 import matplotlib.pyplot as plt
 
-# =========================
-# FUNKCIJE
-# =========================
+
 
 def f1(x):
     return x**3
@@ -19,18 +17,13 @@ def dt1(x):
 def dt2(x):
     return np.cos(x)
 
-# =========================
-# UNOS
-# =========================
 
 print("Unos korisnika:\n")
 x_min = float(input("Unesi donju granicu: \n"))
 x_max = float(input("Unesi gornju granicu: \n"))
 epsilon = float(input("Unesi veličinu koraka (npr. 0.5, 0.1, 0.01): "))
 
-# =========================
-# NUMERIČKA DERIVACIJA
-# =========================
+
 
 x1, y1_three = calculus.raspon(f1, x_min, x_max, epsilon=epsilon, metoda="three-step")
 _,  y1_two   = calculus.raspon(f1, x_min, x_max, epsilon=epsilon, metoda="two-step")
@@ -42,9 +35,7 @@ _,  y2_two   = calculus.raspon(f2, x_min, x_max, epsilon=epsilon, metoda="two-st
 y_anal1 = dt1(x1)
 y_anal2 = dt2(x2)
 
-# =========================
-# GRAF DERIVACIJA
-# =========================
+
 
 plt.figure(figsize=(12,12))
 
@@ -73,9 +64,7 @@ plt.grid(True)
 plt.show()
 
 
-# =========================
-# GRAF POGREŠKE (BITNO!!)
-# =========================
+
 
 # apsolutna pogreška
 error_three_1 = abs(y1_three - y_anal1)

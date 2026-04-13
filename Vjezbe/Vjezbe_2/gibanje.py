@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 from particle import Particle
+import numpy as np
 
 g = 9.81
 
@@ -26,7 +27,7 @@ moja_klasa.plot_trajectory()
 # GRAF RELATIVNE POGREŠKe
 
 
-dt_values = [0.5, 0.2, 0.1, 0.05, 0.01]
+dt_values = np.logspace(-4, 0, 200)#promijeni da ide trend gore dolje oscilacije
 rel_errors = []
 
 for dt in dt_values:
@@ -36,7 +37,6 @@ for dt in dt_values:
     rel_error = abs(D_num - D_anal) / abs(D_anal)
     rel_errors.append(rel_error)
 
-# crtanje grafa
 plt.figure()
 plt.plot(dt_values, rel_errors, marker='o')
 
