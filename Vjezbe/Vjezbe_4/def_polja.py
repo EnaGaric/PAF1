@@ -17,7 +17,7 @@ class Cestica:
 
     def lorentzova_sila(self):
         v = self.stanje[3:]
-        return self.naboj * (self.E + np.cross(v, self.B)) #cross je vektorsko mnozenje
+        return self.naboj * (self.E + np.cross(v, self.B))
 
     def kretanje(self):
         a = self.lorentzova_sila() / self.masa
@@ -36,7 +36,7 @@ class Cestica:
         self.z.append(self.stanje[2])
 
     def simulacija(self, trajanje):
-        for _ in np.arange(0, trajanje, self.dt):
+        for _ in np.arange(0, trajanje, self.dt): #pitaj jeli točno
             self.kretanje()
 
     def prikaži_putanju(self, naslov):
