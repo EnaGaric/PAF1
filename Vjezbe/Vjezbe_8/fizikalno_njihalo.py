@@ -18,74 +18,67 @@ T_240 = np.array([1.0140, 1.0320, 1.0433, 1.0673, 1.0840,
 theta = np.radians(kut_deg)
 g = 9.81
 
-L_teor_120 = 0.12
-L_teor_240 = 0.24
+L_true_120 = 0.12
+L_true_240 = 0.24
 
 
 def T_model(theta, l):
     return 2*np.pi*np.sqrt(l / (g*np.cos(theta)))
 
 
-#numerička linearizacija
-# T^2 cosθ = (4π^2/g) l
+cos_theta = np.cos(theta)
+
+# LINEARIZACIJA (FIT BEZ curve_fit)
+
+cos_theta = np.cos(theta)
+
+T2_120 = T_120**2
+T2_240 = T_240**2
+
+# linearizirani oblik:
+# T^2 * cos(theta) = k * cos(theta)
+Y_120 = T2_120 * cos_theta
+Y_240 = T2_240 * cos_theta
+
+# least squares fit kroz ishodište: Y = kx
+k_120 = np.sum(cos_theta * Y_120) / np.sum(cos_theta**2)
+k_240 = np.sum(cos_theta * Y_240) / np.sum(cos_theta**2)
+
+# iz k dobivamo l
+L_120 = (k_120 * g) / (4 * np.pi**2)
+L_240 = (k_240 * g) / (4 * np.pi**2)
+
+theta_smooth = np.linspace(0, np.deg2rad(85), 300)
 
 
-x = np.cos(theta)
-
-y120 = T_120**2
-y240 = T_240**2
-
-#transformacija: y * cosθ = k l
-Y120 = y120 * x
-Y240 = y240 * x
-
-
-#analitički fit (kroz ishodište)
-
-
-k120 = np.sum(x * Y120) / np.sum(x**2)
-k240 = np.sum(x * Y240) / np.sum(x**2)
-
-# l iz konstante
-l120 = (k120 * g) / (4 * np.pi**2)
-l240 = (k240 * g) / (4 * np.pi**2)
-
-
-
-theta_glatko = np.linspace(0, np.radians(85), 300)
-
-T120_teor = T_model(theta_glatko, L_teor_120)
-T240_teor = T_model(theta_glatko, L_teor_240)
-
-
+T_theory_120 = T_model(theta_smooth, L_true_120)
+T_theory_240 = T_model(theta_smooth, L_true_240)
 
 plt.figure()
 
-plt.scatter(kut_deg, T_120, color='royalblue', label='120 mm mjerenja')
-plt.scatter(kut_deg, T_240, color='seagreen', label='240 mm mjerenja')
+# mjerenja
+plt.scatter(kut_deg, T_120, label="120 mm mjerenja", color="royalblue")
+plt.scatter(kut_deg, T_240, label="240 mm mjerenja", color="seagreen")
 
-plt.plot(np.degrees(theta_glatko), T120_teor, color='darkblue', label='120 mm teorija')
-plt.plot(np.degrees(theta_glatko), T240_teor, color='darkgreen', label='240 mm teorija')
+# teorija
+plt.plot(np.rad2deg(theta_smooth), T_theory_120, color="blue", label="120 mm teorija")
+plt.plot(np.rad2deg(theta_smooth), T_theory_240, color="green", label="240 mm teorija")
 
 plt.xlabel("kut θ (°)")
 plt.ylabel("period T (s)")
-plt.title("Fizikalno njihalo")
+plt.title("Fizikalno njihalo – mjerenja vs teorija")
 plt.grid()
 plt.legend()
 
 plt.show()
 
 
-rel_120 = abs(l120 - L_teor_120) / L_teor_120
-rel_240 = abs(l240 - L_teor_240) / L_teor_240
-
-
-print("===== REZULTATI =====")
+print("\n===== REZULTATI =====")
 
 print("\n120 mm:")
-print("l =", l120)
-print("relativna pogreška =", rel_120)
+print("l =", L_120)
+print("relativna pogreška =", abs(L_120 - L_true_120) / L_true_120)
 
 print("\n240 mm:")
-print("l =", l240)
-print("relativna pogreška =", rel_240)
+print("l =", L_240)
+print("relativna pogreška =", abs(L_240 - L_true_240) / L_true_240)

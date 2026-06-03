@@ -29,24 +29,6 @@ y_fit = a*x + b
 aef1 = 2*np.exp(b)
 
 
-# error bars na uzor od gnuplota
-
-
-s_std = np.std(s, ddof=1)
-y_err = s_std / s   # propagacija u log(s)
-
-plt.figure()
-
-plt.errorbar(
-    x, y,
-    yerr=y_err,
-    fmt='o',
-    color='royalblue',
-    ecolor='gray',
-    capsize=3,
-    label='mjerenja'
-)
-
 plt.plot(x, y_fit, color='darkorange', label='fit')
 
 plt.xlabel("log(t)")
@@ -99,3 +81,29 @@ Iz = (m*g*r**2)/aef2 - m*r**2
 
 print("\n*** MOMENT TROMOSTI ***")
 print("Iz =", Iz, "kg m^2")
+
+#dio pod c
+
+# odstupanja iz s - t^2 fit-a
+odstupanja = y2 - y_fit2
+
+# standardna pogreška nagiba
+delta_a2 = np.sqrt(
+    np.sum(odstupanja**2) / (n - 2) / np.sum((x2 - np.mean(x2))**2)
+)
+
+# efektivno ubrzanje + pogreška
+aef = 2 * a2
+delta_aef = 2 * delta_a2
+
+# moment tromosti
+Iz = (m * g * r**2) / aef - m * r**2
+
+# propagacija pogreške
+delta_Iz = (m * g * r**2) / (aef**2) * delta_aef
+
+print("\n*** MOMENT TROMOSTI ***")
+print("Iz =", Iz, "kg m^2")
+print("ΔIz =", delta_Iz, "kg m^2")
+
+print(f"\nIz = ({Iz:.3e} ± {delta_Iz:.1e}) kg m²")
