@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from scipy.optimize import curve_fit
 
 kut_deg = np.array([0, 5, 10, 15, 20, 25, 30, 35, 40,
                     45, 50, 55, 60, 65, 70, 75, 80, 85])
@@ -26,21 +26,38 @@ def T_model(theta, l):
     return 2*np.pi*np.sqrt(l / (g*np.cos(theta)))
 
 
+# curve_fit mora imati x kao jedan input (theta)
+def model(theta, l):
+    return 2*np.pi*np.sqrt(l / (g*np.cos(theta)))
+
+
+# FIT ZA 120 mm
+popt_120, pcov_120 = curve_fit(model, theta, T_120, p0=[0.12])
+l_fit_120 = popt_120[0]
+sigma_l_120 = np.sqrt(pcov_120[0,0])
+
+# FIT ZA 240 mm
+popt_240, pcov_240 = curve_fit(model, theta, T_240, p0=[0.24])
+l_fit_240 = popt_240[0]
+sigma_l_240 = np.sqrt(pcov_240[0,0])
+
 cos_theta = np.cos(theta)
 
 # LINEARIZACIJA (FIT BEZ curve_fit)
 
 cos_theta = np.cos(theta)
 
+#kvadriram periode jer je u formuli T^2
 T2_120 = T_120**2
 T2_240 = T_240**2
 
 # linearizirani oblik:
-# T^2 * cos(theta) = k * cos(theta)
+# T^2 * cos(theta) = k * cos(theta), množim sa cos da dobijem konst
 Y_120 = T2_120 * cos_theta
 Y_240 = T2_240 * cos_theta
 
 # least squares fit kroz ishodište: Y = kx
+#ovo je linearni fit
 k_120 = np.sum(cos_theta * Y_120) / np.sum(cos_theta**2)
 k_240 = np.sum(cos_theta * Y_240) / np.sum(cos_theta**2)
 
@@ -48,6 +65,8 @@ k_240 = np.sum(cos_theta * Y_240) / np.sum(cos_theta**2)
 L_120 = (k_120 * g) / (4 * np.pi**2)
 L_240 = (k_240 * g) / (4 * np.pi**2)
 
+
+#da bude glatka krivulja
 theta_smooth = np.linspace(0, np.deg2rad(85), 300)
 
 
@@ -82,3 +101,14 @@ print("relativna pogreška =", abs(L_120 - L_true_120) / L_true_120)
 print("\n240 mm:")
 print("l =", L_240)
 print("relativna pogreška =", abs(L_240 - L_true_240) / L_true_240)
+
+
+print("\n===== CURVE_FIT REZULTATI =====")
+
+print("\n120 mm:")
+print(f"l = ({l_fit_120:.3e} ± {sigma_l_120:.1e}) m")
+print("relativna pogreška =", abs(l_fit_120 - L_true_120) / L_true_120)
+
+print("\n240 mm:")
+print(f"l = ({l_fit_240:.3e} ± {sigma_l_240:.1e}) m")
+print("relativna pogreška =", abs(l_fit_240 - L_true_240) / L_true_240)

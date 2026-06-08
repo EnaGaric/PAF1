@@ -26,7 +26,13 @@ b = (np.sum(y) - a*np.sum(x)) / n
 
 y_fit = a*x + b
 
-aef1 = 2*np.exp(b)
+
+p, cov = np.polyfit(x, y, 1, cov=True)
+# polyfit radi regresiju, cov True daje nesigurnost parametara
+#cov je matrica varijance-kovarijance, dijagonala je sigma^2 pa uzimam korijen
+
+sigma_a = np.sqrt(cov[0, 0])
+sigma_b = np.sqrt(cov[1, 1])
 
 
 plt.plot(x, y_fit, color='darkorange', label='fit')
@@ -40,9 +46,9 @@ plt.legend()
 plt.show()
 
 print("*** LOG-LOG ***")
-print("a =", a)
-print("b =", b)
-print("aef =", aef1)
+print(f"a = ({a:.3e} ± {sigma_a:.1e})")
+print(f"b = ({b:.3e} ± {sigma_b:.1e})")
+
 
 
 # s - t^2
@@ -54,8 +60,9 @@ a2 = np.sum(x2*y2) / np.sum(x2**2)
 
 y_fit2 = a2*x2
 
-aef2 = 2*a2
+p2, cov2 = np.polyfit(x2, y2, 1, cov=True)
 
+sigma_a2 = np.sqrt(cov2[0, 0])
 
 plt.figure()
 
@@ -71,12 +78,11 @@ plt.legend()
 plt.show()
 
 print("\n*** s - t² ***")
-print("a =", a2)
-print("aef =", aef2)
+print(f"a = ({a2:.3e} ± {sigma_a2:.1e})")
 
 
 # moment tromosti
-
+aef2 = 2 * a2
 Iz = (m*g*r**2)/aef2 - m*r**2
 
 print("\n*** MOMENT TROMOSTI ***")
