@@ -34,7 +34,7 @@ p, cov = np.polyfit(x, y, 1, cov=True)
 sigma_a = np.sqrt(cov[0, 0])
 sigma_b = np.sqrt(cov[1, 1])
 
-
+plt.scatter(x, y, color='seagreen', label='mjerenja')
 plt.plot(x, y_fit, color='darkorange', label='fit')
 
 plt.xlabel("log(t)")
@@ -56,9 +56,10 @@ print(f"b = ({b:.3e} ± {sigma_b:.1e})")
 x2 = t**2
 y2 = s
 
-a2 = np.sum(x2*y2) / np.sum(x2**2)
+a2 = (n*np.sum(x2*y2) - np.sum(x2)*np.sum(y2)) / (n*np.sum(x2**2) - (np.sum(x2))**2)
+b2 = (np.sum(y2) - a2*np.sum(x2)) / n
 
-y_fit2 = a2*x2
+y_fit2 = a2*x2 + b2
 
 p2, cov2 = np.polyfit(x2, y2, 1, cov=True)
 
